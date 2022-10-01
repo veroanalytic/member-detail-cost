@@ -5,7 +5,7 @@ USE Repository
 --WHERE FileBatch_ID = '20220930225257'
 
 
-SELECT 
+SELECT TOP 5
 	  Member_ID
 	, First_Name
 	, Last_Name
@@ -61,6 +61,7 @@ WHERE Number_Of_Occurences > 1
 GO
 
 
+-- Sum/Avg Cost by Occurence
 WITH Multiple_Occurrences 
 AS 
 (
@@ -71,17 +72,12 @@ FROM Repository.dbo.Member_Detail_Cost
 )
 SELECT
   Number_Of_Occurences
-, COUNT(*) AS CNT
-, SUM(Cost) AS Multiple_Occurence_Sum_Cost
-, AVG(Cost) AS Multiple_Occurence_Avg_Cost
+, COUNT(*) AS Member_Count
+, SUM(Cost) AS Occurence_Sum_Cost
+, AVG(Cost) AS Occurence_Avg_Cost
 FROM Multiple_Occurrences
 GROUP BY Number_Of_Occurences
 GO
-
-SELECT *
-FROM Repository.dbo.Member_Detail_Cost 
-WHERE Member_ID = 119939
-
 
 
 
@@ -101,31 +97,5 @@ FROM Repository.dbo.Member_Detail_Cost
 WHERE Cost = @minprice
 
 
--- Total Sum/Avg of Cost per Member
-SELECT Member_ID, First_Name, Last_Name, DOB
-, SUM(Cost) AS Sum_Cost, AVG(COST) AS Average_Cost
-FROM Repository.dbo.Member_Detail_Cost 
-GROUP BY Member_ID, First_Name, Last_Name, DOB
-ORDER BY Member_ID, First_Name, Last_Name, DOB
 
 
-
-
-
-
-SELECT 
-	  Member_ID
-	, First_Name
-	, Last_Name
-	, DOB
-	--, Service_DT
-	--, Cost
-FROM Repository.dbo.Member_Detail_Cost 
-GROUP BY
-	  Member_ID
-	, First_Name
-	, Last_Name
-	, DOB
-	--, Service_DT
-	--, Cost
-HAVING COUNT(Member_ID) = 1
